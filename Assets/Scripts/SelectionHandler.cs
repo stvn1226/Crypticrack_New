@@ -188,19 +188,58 @@ public class SelectionHandler : MonoBehaviour
         Debug.Log($"Feedback: {correctPosition} correct position, {correctColor} correct color");
 
         // Example: Update the Text component in the Square child
-        Transform currentGuessTransform = transform.Find($"Canvas/Guesses/GuessHoriz ({guessIndex})");
+        //Transform currentGuessTransform = transform.Find($"Canvas/Guesses/GuessHoriz ({guessIndex})");
+        //if (currentGuessTransform != null)
+        //{
+        //    Transform squareTransform = currentGuessTransform.Find("Square");
+        //    if (squareTransform != null)
+        //    {
+        //        TMPro.TMP_Text feedbackText = squareTransform.GetComponentInChildren<TMPro.TMP_Text>();
+        //        if (feedbackText != null)
+        //        {
+        //            feedbackText.text = $"🟢:{correctPosition} 🟡:{correctColor}";
+        //        }
+        //    }
+        //}
+
+        // Find the current guess's transform
+        Transform currentGuessTransform = GameObject.Find($"Canvas/Guesses/GuessHoriz ({guessIndex})").transform;
+        if (guessIndex == 0)
+        {
+            currentGuessTransform = GameObject.Find("Canvas/Guesses/GuessHoriz").transform;
+        }
+
         if (currentGuessTransform != null)
         {
+            // Use the HintScript to update the hints
+            Transform hintsTransform = currentGuessTransform.Find("Hints");
+            if (hintsTransform != null)
+            {
+                HintScript hintScript = hintsTransform.GetComponent<HintScript>();
+                if (hintScript != null)
+                {
+                    // Let the HintScript handle the visual feedback
+                    hintScript.UpdateHints(correctPosition, correctColor);
+                }
+                else
+                {
+                    Debug.LogWarning($"HintScript component not found on Hints object for guess {guessIndex}");
+                }
+            }
+
+            // You can keep the text feedback as a backup or for debugging
             Transform squareTransform = currentGuessTransform.Find("Square");
             if (squareTransform != null)
             {
                 TMPro.TMP_Text feedbackText = squareTransform.GetComponentInChildren<TMPro.TMP_Text>();
                 if (feedbackText != null)
                 {
+                    // You can comment this out if you want to rely only on the visual hints
                     feedbackText.text = $"🟢:{correctPosition} 🟡:{correctColor}";
                 }
             }
         }
+
     }
 
     public void NextGuess()
