@@ -245,10 +245,17 @@ public class SelectionHandler : MonoBehaviour
     public void NextGuess()
     {
         // Clear current holes
+        //for (int i = 0; i < holes.Length; i++)
+        //{
+        //    holes[i].OnClear();
+        //}
+
+        //disable all markers on previous guess;
         for (int i = 0; i < holes.Length; i++)
         {
-            holes[i].OnClear();
+            holes[i].ToggleMarker(holes.Length);
         }
+
 
         // Reset hole index
         holeIndex = 0;
@@ -314,6 +321,13 @@ public class SelectionHandler : MonoBehaviour
 
         holes[holeIndex].OnSelect(value, colorTxt, colorBg);
         holeIndex += 1;
+        //if (holeIndex > 3)
+        //{
+        //    holeIndex = 3;
+        //}
+        //holes[holeIndex - 1].ToggleMarker(holeIndex);
+        //holes[holeIndex].ToggleMarker(holeIndex);
+        CheckMarkers();
     }
 
     public void TryGuess(int currGuessIndex, int[] answer)
@@ -324,5 +338,13 @@ public class SelectionHandler : MonoBehaviour
     public void NextGuess(int currGuessIndex)
     {
         Debug.Log("Next guess.");
+    }
+
+    public void CheckMarkers()
+    {
+        for (int i = 0; i < holes.Length; i++)
+        {
+            holes[i].ToggleMarker(holeIndex);
+        }
     }
 }

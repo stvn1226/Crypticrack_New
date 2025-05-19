@@ -28,9 +28,4 @@ public class PegScript : MonoBehaviour
 
         SelectionHandler.instance.FillHole(valueInt, value.color, img.color);
     }
-
-    public void ClickHandler()
-    {
-
-    }
 }

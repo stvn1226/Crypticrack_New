@@ -29,6 +29,7 @@ public class ButtonHandler : MonoBehaviour
                 selectionHandler.holes[i].OnClear();
             }
             selectionHandler.holeIndex = 0;
+            selectionHandler.CheckMarkers();
         }
     }
 
