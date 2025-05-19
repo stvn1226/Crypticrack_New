@@ -17,7 +17,10 @@ public class HintScript : MonoBehaviour
     public Color incorrectColor = new Color(0.58f, 0.58f, 0.58f); // Gray
 
     // References to the hint image components
-    private Image[] hintImages;
+    public Image hintImage;
+
+    // Hint's identifier
+    public int id;
 
     // Animation settings
     [Header("Animation Settings")]
@@ -33,7 +36,7 @@ public class HintScript : MonoBehaviour
     private void Awake()
     {
         // Get all hint image components
-        hintImages = GetComponentsInChildren<Image>();
+        hintImage = GetComponent<Image>();
 
         // Find the guess index by traversing up the hierarchy
         Transform guessTransform = transform.parent;
@@ -49,75 +52,6 @@ public class HintScript : MonoBehaviour
                 int.TryParse(indexStr, out guessIndex);
             }
         }
-    }
-
-    /// <summary>
-    /// Updates the hint colors based on the guess results
-    /// </summary>
-    /// <param name="correctPosition">Number of pegs with correct color and position</param>
-    /// <param name="correctColor">Number of pegs with correct color but wrong position</param>
-    public void UpdateHints(int correctPosition, int correctColor)
-    {
-        // Log the results for debugging
-        Debug.Log($"HintScript: Updating hints for guess {guessIndex} - Correct position: {correctPosition}, Correct color: {correctColor}");
-
-        // Make sure we have enough hint images
-        if (hintImages == null || hintImages.Length < 4)
-        {
-            Debug.LogError("HintScript: Not enough hint images found!");
-            return;
-        }
-
-        // Stop all running animations if we're animating
-        if (animateColorChanges)
-        {
-            StopAllCoroutines();
-        }
-
-        // Reset all hints to the 'incorrect' color first
-        for (int i = 0; i < hintImages.Length; i++)
-        {
-            if (animateColorChanges)
-            {
-                StartCoroutine(AnimateColorChange(hintImages[i], incorrectColor));
-            }
-            else
-            {
-                hintImages[i].color = incorrectColor;
-            }
-        }
-
-        int hintIndex = 0;
-
-        // Set green hints first (correct position and color)
-        for (int i = 0; i < correctPosition && hintIndex < hintImages.Length; i++)
-        {
-            if (animateColorChanges)
-            {
-                StartCoroutine(AnimateColorChange(hintImages[hintIndex], correctPositionColor));
-            }
-            else
-            {
-                hintImages[hintIndex].color = correctPositionColor;
-            }
-            hintIndex++;
-        }
-
-        // Set red hints next (correct color but wrong position)
-        for (int i = 0; i < correctColor && hintIndex < hintImages.Length; i++)
-        {
-            if (animateColorChanges)
-            {
-                StartCoroutine(AnimateColorChange(hintImages[hintIndex], correctColorColor));
-            }
-            else
-            {
-                hintImages[hintIndex].color = correctColorColor;
-            }
-            hintIndex++;
-        }
-
-        // The remaining hints stay gray (already set above)
     }
 
     /// <summary>
@@ -144,12 +78,12 @@ public class HintScript : MonoBehaviour
     /// </summary>
     public void ResetHints()
     {
-        if (hintImages == null) return;
+        if (hintImage == null) return;
 
-        foreach (Image hint in hintImages)
-        {
-            hint.color = incorrectColor;
-        }
+        //foreach (Image hint in hintImage)
+        //{
+        //    hint.color = incorrectColor;
+        //}
     }
 
     // Optional: Accessibility feature for colorblind mode

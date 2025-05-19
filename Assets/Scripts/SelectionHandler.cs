@@ -11,6 +11,8 @@ public class SelectionHandler : MonoBehaviour
     public int guessIndex = 0;
     public HoleScript[] holes = new HoleScript[4];
     public int holeIndex = 0;
+    public HintScript[] hints = new HintScript[4];
+    public int hintIndex = 0;
 
     public static SelectionHandler instance;
 
@@ -21,6 +23,7 @@ public class SelectionHandler : MonoBehaviour
     public Transform secretCodeHolesParent;
     private TMPro.TMP_Text[] secretCodeLabels;
     public GameObject secretCodeCover;
+    public GameObject resultPanel;
 
     private void Awake()
     {
@@ -187,58 +190,22 @@ public class SelectionHandler : MonoBehaviour
         // You could use text or colored dots to show the feedback
         Debug.Log($"Feedback: {correctPosition} correct position, {correctColor} correct color");
 
-        // Example: Update the Text component in the Square child
-        //Transform currentGuessTransform = transform.Find($"Canvas/Guesses/GuessHoriz ({guessIndex})");
-        //if (currentGuessTransform != null)
+        hintIndex = 0;
+
+        //for (int i = 0; i < hints.Length; i++)
         //{
-        //    Transform squareTransform = currentGuessTransform.Find("Square");
-        //    if (squareTransform != null)
-        //    {
-        //        TMPro.TMP_Text feedbackText = squareTransform.GetComponentInChildren<TMPro.TMP_Text>();
-        //        if (feedbackText != null)
-        //        {
-        //            feedbackText.text = $"🟢:{correctPosition} 🟡:{correctColor}";
-        //        }
-        //    }
-        //}
-
-        // Find the current guess's transform
-        Transform currentGuessTransform = GameObject.Find($"Canvas/Guesses/GuessHoriz ({guessIndex})").transform;
-        if (guessIndex == 0)
-        {
-            currentGuessTransform = GameObject.Find("Canvas/Guesses/GuessHoriz").transform;
-        }
-
-        if (currentGuessTransform != null)
-        {
-            // Use the HintScript to update the hints
-            Transform hintsTransform = currentGuessTransform.Find("Hints");
-            if (hintsTransform != null)
+            for(int p = 0; p < correctPosition; p++)
             {
-                HintScript hintScript = hintsTransform.GetComponent<HintScript>();
-                if (hintScript != null)
-                {
-                    // Let the HintScript handle the visual feedback
-                    hintScript.UpdateHints(correctPosition, correctColor);
-                }
-                else
-                {
-                    Debug.LogWarning($"HintScript component not found on Hints object for guess {guessIndex}");
-                }
+                hints[hintIndex].transform.localScale = Vector3.one * 1.5f;
+                hints[hintIndex].hintImage.color = hints[hintIndex].correctPositionColor;
+                hintIndex++;
             }
-
-            // You can keep the text feedback as a backup or for debugging
-            Transform squareTransform = currentGuessTransform.Find("Square");
-            if (squareTransform != null)
+            for (int c = 0;  c < correctColor; c++)
             {
-                TMPro.TMP_Text feedbackText = squareTransform.GetComponentInChildren<TMPro.TMP_Text>();
-                if (feedbackText != null)
-                {
-                    // You can comment this out if you want to rely only on the visual hints
-                    feedbackText.text = $"🟢:{correctPosition} 🟡:{correctColor}";
-                }
+                hints[hintIndex].transform.localScale = Vector3.one * 1.5f;
+                hints[hintIndex].hintImage.color = hints[hintIndex].correctColorColor;
+                hintIndex++;
             }
-        }
 
     }
 
@@ -274,11 +241,19 @@ public class SelectionHandler : MonoBehaviour
         if (guesses[guessIndex] != null)
         {
             holes = guesses[guessIndex].GetComponentsInChildren<HoleScript>();
+            hints = guesses[guessIndex].GetComponentsInChildren<HintScript>();
             for (int i = 0; i < holes.Length; i++)
             {
                 if (holes[i] != null)
                 {
                     holes[i].id = i;
+                }
+            }
+            for (int j  = 0; j < hints.Length; j++)
+            {
+                if (hints[j] != null)
+                {
+                    hints[j].id = j;
                 }
             }
         }
@@ -290,7 +265,6 @@ public class SelectionHandler : MonoBehaviour
         RevealSecretCode();
 
         // Show result panel
-        GameObject resultPanel = GameObject.Find("Canvas/GameResultPanel");
         if (resultPanel != null)
         {
             resultPanel.SetActive(true);
