@@ -17,6 +17,7 @@ public class HoleScript : MonoBehaviour
         img = GetComponent<Image>();
         label = GetComponentInChildren<TMP_Text>(true);
         empty = GetComponent<Image>().color;
+        marker.gameObject.SetActive(false);
         SelectionHandler.instance.CheckMarkers();
     }
 
@@ -39,7 +40,19 @@ public class HoleScript : MonoBehaviour
         marker.transform.localScale = Vector3.one * 1;
         //marker.transform.right = Vector3.one * 1;
         SelectionHandler.instance.holeIndex = id;
+        marker.gameObject.SetActive(false);
         SelectionHandler.instance.CheckMarkers();
+    }
+
+    public void OnWipe()
+    {
+        transform.localScale = Vector3.one * 1;
+        label.text = "";
+        img.color = empty;
+        marker.transform.localScale = Vector3.one * 1;
+        marker.gameObject.SetActive(false);
+        SelectionHandler.instance.CheckMarkers();
+
     }
 
     public void ToggleMarker()

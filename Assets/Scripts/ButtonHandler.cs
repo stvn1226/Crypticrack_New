@@ -24,7 +24,7 @@ public class ButtonHandler : MonoBehaviour
             // Clear all holes in current guess
             for (int i = 0; i < SelectionHandler.instance.holes.Length; i++)
             {
-                SelectionHandler.instance.holes[i].OnClear();
+                SelectionHandler.instance.holes[i].OnWipe();
             }
             SelectionHandler.instance.holeIndex = 0;
             SelectionHandler.instance.CheckMarkers();
@@ -66,8 +66,7 @@ public class ButtonHandler : MonoBehaviour
                 {
                     if (SelectionHandler.instance.holes[i] != null)
                     {
-                        SelectionHandler.instance.holes[i].id = i;
-                        SelectionHandler.instance.holes[i].OnClear();
+                        SelectionHandler.instance.holes[i].OnWipe();
                     }
                 }
             }
@@ -75,6 +74,9 @@ public class ButtonHandler : MonoBehaviour
             SelectionHandler.instance.InitializeSecretCodeDisplay();
             SelectionHandler.instance.HideGameResult();
             SelectionHandler.instance.HideSecretCode();
+            SelectionHandler.instance.guessIndex = 0;
+            SelectionHandler.instance.CheckMarkers();
+
         }
     }
 
@@ -98,7 +100,7 @@ public class ButtonHandler : MonoBehaviour
                     {
                         if (holes[j] != null)
                         {
-                            holes[j].OnClear();
+                            holes[j].OnWipe();
                         }
                     }
 
