@@ -14,8 +14,6 @@ public class HoleScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        img = GetComponent<Image>();
-        label = GetComponentInChildren<TMP_Text>(true);
         empty = GetComponent<Image>().color;
         marker.gameObject.SetActive(false);
         SelectionHandler.instance.CheckMarkers();
