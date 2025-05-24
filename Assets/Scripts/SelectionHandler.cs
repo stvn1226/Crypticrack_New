@@ -220,7 +220,7 @@ public class SelectionHandler : MonoBehaviour
         //disable all markers on previous guess;
         for (int i = 0; i < holes.Length; i++)
         {
-            holes[i].ToggleMarker(holes.Length);
+            holes[i].ToggleMarker();
         }
 
 
@@ -257,6 +257,7 @@ public class SelectionHandler : MonoBehaviour
                 }
             }
         }
+        CheckMarkers();
     }
 
     public void DisplayGameResult(bool won)
@@ -278,6 +279,15 @@ public class SelectionHandler : MonoBehaviour
                     "Game Over! The code remains unbroken.";
             }
         }
+    }
+
+    public void HideGameResult() 
+    {
+        if (resultPanel != null)
+        {
+            resultPanel.SetActive(false);
+        }
+
     }
 
 
@@ -316,9 +326,10 @@ public class SelectionHandler : MonoBehaviour
 
     public void CheckMarkers()
     {
+        
         for (int i = 0; i < holes.Length; i++)
         {
-            holes[i].ToggleMarker(holeIndex);
+            holes[i].ToggleMarker();
         }
     }
 }

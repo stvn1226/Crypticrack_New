@@ -75,7 +75,8 @@ public class ButtonHandler : MonoBehaviour
             }
             // Update the secret code display
             selectionHandler.InitializeSecretCodeDisplay();
-
+            selectionHandler.HideGameResult();
+            selectionHandler.HideSecretCode();
         }
     }
 

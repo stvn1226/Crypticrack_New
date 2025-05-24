@@ -17,7 +17,7 @@ public class HoleScript : MonoBehaviour
         img = GetComponent<Image>();
         label = GetComponentInChildren<TMP_Text>(true);
         empty = GetComponent<Image>().color;
-        ToggleMarker(SelectionHandler.instance.holeIndex);
+        SelectionHandler.instance.CheckMarkers();
     }
 
     public void OnSelect(int value, Color colorText, Color colorBg)
@@ -42,9 +42,10 @@ public class HoleScript : MonoBehaviour
         SelectionHandler.instance.CheckMarkers();
     }
 
-    public void ToggleMarker(int holeIndex)
+    public void ToggleMarker()
     {
-        if (holeIndex == id)
+
+        if (SelectionHandler.instance.holeIndex == id)
         {
             marker.gameObject.SetActive(true);
         }
