@@ -1,102 +1,88 @@
 ﻿using UnityEngine;
+using TMPro;
 
 public class SelectionHandler : MonoBehaviour
 {
+    public static SelectionHandler instance;
+    
     public PegScript peg { get; private set; }
+    
+    [Header("Game Flow")]
     public GuessScript[] guesses = new GuessScript[8];
     public int guessIndex = 0;
-    public HoleScript[] holes = new HoleScript[4];
     public int holeIndex = 0;
-    public HintScript[] hints = new HintScript[4];
     public int hintIndex = 0;
-
-    public static SelectionHandler instance;
-
+    
+    [Header("Game State")]
     public int[] secretCode = new int[4];
     public bool gameOver = false;
     public bool playerWon = false;
 
+    [Header("UI")]
     public Transform secretCodeHolesParent;
-    private TMPro.TMP_Text[] secretCodeLabels;
+    private TMP_Text[] secretCodeLabels;
     public GameObject secretCodeCover;
     public GameObject resultPanel;
 
+    private HoleScript[] holes => guesses[guessIndex].holes;
+    private HintScript[] hints => guesses[guessIndex].hints;
+    
     private void Awake()
     {
-        if (instance != null)
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
+            return;
         }
         instance = this;
     }
 
-    // Start is called before the first frame update
+    // We clean the start method with a simpler way / Way more optimal
     void Start()
     {
         GenerateSecretCode();
         InitializeSecretCodeDisplay();
+
         if (guesses.Length > 0 && guesses[0] != null)
         {
-            holes = guesses[0].GetComponentsInChildren<HoleScript>();
-            for (int i = 0; i < holes.Length; i++)
-            {
-                if (holes[i] != null)
-                {
-                    holes[i].id = i;
-                }
-            }
+            CheckMarkers();
         }
-
     }
 
     public void GenerateSecretCode()
     {
         for (int i = 0; i < secretCode.Length; i++)
         {
-            secretCode[i] = UnityEngine.Random.Range(1, 7); // 1-6 for six peg colors
+            secretCode[i] = Random.Range(1, 7); // 1-6 peg colors
         }
-        Debug.Log("Secret code generated");
-        //Debug.Log(secretCode[0] + " " + secretCode[1] + " " + secretCode[2] + " " + secretCode[3]);
 
-        // Uncomment for debugging
         Debug.Log($"Secret code: {string.Join(", ", secretCode)}");
     }
 
     public void InitializeSecretCodeDisplay()
     {
-        // Get references to the secret code labels
-        secretCodeLabels = new TMPro.TMP_Text[secretCode.Length];
+        secretCodeLabels = new TMP_Text[secretCode.Length];
 
         for (int i = 0; i < secretCode.Length; i++)
         {
             Transform holeTransform = secretCodeHolesParent.Find($"SecretHole ({i})");
             if (holeTransform != null)
             {
-                secretCodeLabels[i] = holeTransform.GetComponentInChildren<TMPro.TMP_Text>();
-
-                // Update the labels with the secret code values
+                secretCodeLabels[i] = holeTransform.GetComponentInChildren<TMP_Text>();
                 if (secretCodeLabels[i] != null)
-                {
                     secretCodeLabels[i].text = secretCode[i].ToString();
-                }
             }
         }
 
-        // Hide the secret code for gameplay
-        //HideSecretCode();
+        //HideSecretCode(); // Optional
     }
 
     public void RevealSecretCode()
     {
         Debug.Log($"Secret code was: {string.Join(", ", secretCode)}");
 
-        // Call this when the game ends
         if (secretCodeCover != null)
-        {
             secretCodeCover.SetActive(false);
-        }
-
-        // Optional: You could add animation here to reveal the code dramatically
     }
 
     public void HideSecretCode()
@@ -135,7 +121,6 @@ public class SelectionHandler : MonoBehaviour
         bool[] secretCodeUsed = new bool[secretCode.Length];
         bool[] guessUsed = new bool[currentGuess.Length];
 
-        // First check for correct positions
         for (int i = 0; i < secretCode.Length; i++)
         {
             if (currentGuess[i] == secretCode[i])
@@ -146,15 +131,12 @@ public class SelectionHandler : MonoBehaviour
             }
         }
 
-        // Then check for correct colors in wrong positions
-        for (int i = 0; i < secretCode.Length; i++)
+        for (int i = 0; i < currentGuess.Length; i++)
         {
-            if (guessUsed[i]) continue; // Skip already matched positions
-
+            if (guessUsed[i]) continue;
             for (int j = 0; j < secretCode.Length; j++)
             {
-                if (secretCodeUsed[j]) continue; // Skip already matched positions
-
+                if (secretCodeUsed[j]) continue;
                 if (currentGuess[i] == secretCode[j])
                 {
                     correctColor++;
@@ -173,11 +155,12 @@ public class SelectionHandler : MonoBehaviour
             playerWon = true;
             gameOver = true;
             DisplayGameResult(true);
-            return;
         }
-
-        // Move to next guess or end game
-        NextGuess();
+        else
+        {
+            // Move to next guess or end game
+            NextGuess();
+        }
     }
 
     private void UpdateFeedback(int correctPosition, int correctColor)
@@ -188,86 +171,45 @@ public class SelectionHandler : MonoBehaviour
 
         hintIndex = 0;
 
-        //for (int i = 0; i < hints.Length; i++)
-        //{
-            for(int p = 0; p < correctPosition; p++)
-            {
-                hints[hintIndex].transform.localScale = Vector3.one * 1.5f;
-                hints[hintIndex].hintImage.color = hints[hintIndex].correctPositionColor;
-                hintIndex++;
-            }
-            for (int c = 0;  c < correctColor; c++)
-            {
-                hints[hintIndex].transform.localScale = Vector3.one * 1.5f;
-                hints[hintIndex].hintImage.color = hints[hintIndex].correctColorColor;
-                hintIndex++;
-            }
-
-    }
-
-    public void NextGuess()
-    {
-        // Clear current holes
-        //for (int i = 0; i < holes.Length; i++)
-        //{
-        //    holes[i].OnClear();
-        //}
-
-        //disable all markers on previous guess;
-        for (int i = 0; i < holes.Length; i++)
+        for (int i = 0; i < correctPosition && hintIndex < hints.Length; i++, hintIndex++)
         {
-            holes[i].ToggleMarker();
+            hints[hintIndex].SetHintState(HintState.CorrectPosition);
         }
 
+        for (int i = 0; i < correctColor && hintIndex < hints.Length; i++, hintIndex++)
+        {
+            hints[hintIndex].SetHintState(HintState.CorrectColor);
+        }
+    }
 
-        // Reset hole index
+    // Optimize code
+    public void NextGuess()
+    {
+        // Disable all markers on previous holes
+        foreach (var hole in holes)
+            hole.ToggleMarker();
+
         holeIndex = 0;
-
-        // Move to next guess
         guessIndex++;
 
-        // Check if we're out of guesses
         if (guessIndex >= guesses.Length)
         {
             gameOver = true;
             DisplayGameResult(false);
             return;
         }
-        
-        if (guesses[guessIndex] != null)
-        {
-            holes = guesses[guessIndex].GetComponentsInChildren<HoleScript>();
-            hints = guesses[guessIndex].GetComponentsInChildren<HintScript>();
-            for (int i = 0; i < holes.Length; i++)
-            {
-                if (holes[i] != null)
-                {
-                    holes[i].id = i;
-                }
-            }
-            for (int j  = 0; j < hints.Length; j++)
-            {
-                if (hints[j] != null)
-                {
-                    hints[j].id = j;
-                }
-            }
-        }
-        CheckMarkers();
+
+        CheckMarkers(); // Show marker on first hole of next guess
     }
 
     public void DisplayGameResult(bool won)
     {
-        // Reveal the secret code
         RevealSecretCode();
 
-        // Show result panel
         if (resultPanel != null)
         {
             resultPanel.SetActive(true);
-
-            // Update result text
-            TMPro.TMP_Text resultText = resultPanel.GetComponentInChildren<TMPro.TMP_Text>();
+            TMP_Text resultText = resultPanel.GetComponentInChildren<TMP_Text>();
             if (resultText != null)
             {
                 resultText.text = won ?
@@ -277,39 +219,31 @@ public class SelectionHandler : MonoBehaviour
         }
     }
 
-    public void HideGameResult() 
+    public void HideGameResult()
     {
         if (resultPanel != null)
-        {
             resultPanel.SetActive(false);
-        }
-
     }
 
 
     public void FillHole(int value, Color colorTxt, Color colorBg)
     {
-        Debug.Log("Peg chosen.");
-        if (holeIndex >= holes.Length)
-        {
-            return;
-        }
-        //if (holes[holeIndex].label.text != "")
-        //{
-        //    holeIndex += 1;
-        //}
+        if (holeIndex >= holes.Length || gameOver) return;
 
         holes[holeIndex].OnSelect(value, colorTxt, colorBg);
-        holeIndex += 1;
-        //if (holeIndex > 3)
-        //{
-        //    holeIndex = 3;
-        //}
-        //holes[holeIndex - 1].ToggleMarker(holeIndex);
-        //holes[holeIndex].ToggleMarker(holeIndex);
+        holeIndex++;
         CheckMarkers();
     }
 
+    public void CheckMarkers()
+    {
+        foreach (var hole in holes)
+        {
+            if (hole != null)
+                hole.ToggleMarker();
+        }
+    }
+    
     public void TryGuess(int currGuessIndex, int[] answer)
     {
         Debug.Log("Try guess.");
@@ -318,14 +252,5 @@ public class SelectionHandler : MonoBehaviour
     public void NextGuess(int currGuessIndex)
     {
         Debug.Log("Next guess.");
-    }
-
-    public void CheckMarkers()
-    {
-        
-        for (int i = 0; i < holes.Length; i++)
-        {
-            holes[i].ToggleMarker();
-        }
     }
 }

@@ -1,14 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ButtonHandler : MonoBehaviour
 {
-
-    void Start()
-    {
-    }
-
     public void Confirm()
     {
         if (SelectionHandler.instance != null && !SelectionHandler.instance.gameOver)
@@ -21,11 +14,13 @@ public class ButtonHandler : MonoBehaviour
     {
         if (SelectionHandler.instance != null && !SelectionHandler.instance.gameOver)
         {
-            // Clear all holes in current guess
-            for (int i = 0; i < SelectionHandler.instance.holes.Length; i++)
+            // Accede al grupo de hoyos directamente desde el Guess actual
+            var currentGuess = SelectionHandler.instance.guesses[SelectionHandler.instance.guessIndex];
+            foreach (var hole in currentGuess.holes)
             {
-                SelectionHandler.instance.holes[i].OnWipe();
+                hole.OnWipe();
             }
+
             SelectionHandler.instance.holeIndex = 0;
             SelectionHandler.instance.CheckMarkers();
         }
@@ -43,78 +38,59 @@ public class ButtonHandler : MonoBehaviour
 
     public void NewGame()
     {
-        if (SelectionHandler.instance != null)
+        if (SelectionHandler.instance == null) return;
+
+        SelectionHandler handler = SelectionHandler.instance;
+
+        // Reset game state
+        handler.guessIndex = 0;
+        handler.holeIndex = 0;
+        handler.gameOver = false;
+        handler.playerWon = false;
+
+        handler.GenerateSecretCode();
+        ClearAllGuesses();
+
+        // Limpia el primer grupo
+        if (handler.guesses.Length > 0 && handler.guesses[0] != null)
         {
-            // Reset game state
-            SelectionHandler.instance.guessIndex = 0;
-            SelectionHandler.instance.holeIndex = 0;
-            SelectionHandler.instance.gameOver = false;
-            SelectionHandler.instance.playerWon = false;
-
-            // Generate new secret code
-            SelectionHandler.instance.GenerateSecretCode();
-
-            // Clear all guesses
-            // You need to implement this to reset all guess rows
-            ClearAllGuesses();
-
-            // Initialize first guess row
-            if (SelectionHandler.instance.guesses.Length > 0 && SelectionHandler.instance.guesses[0] != null)
+            foreach (var hole in handler.guesses[0].holes)
             {
-                SelectionHandler.instance.holes = SelectionHandler.instance.guesses[0].GetComponentsInChildren<HoleScript>();
-                for (int i = 0; i < SelectionHandler.instance.holes.Length; i++)
-                {
-                    if (SelectionHandler.instance.holes[i] != null)
-                    {
-                        SelectionHandler.instance.holes[i].OnWipe();
-                    }
-                }
+                hole.OnWipe();
             }
-            // Update the secret code display
-            SelectionHandler.instance.InitializeSecretCodeDisplay();
-            SelectionHandler.instance.HideGameResult();
-            SelectionHandler.instance.HideSecretCode();
-            SelectionHandler.instance.guessIndex = 0;
-            SelectionHandler.instance.CheckMarkers();
-
         }
+
+        handler.InitializeSecretCodeDisplay();
+        handler.HideGameResult();
+        handler.HideSecretCode();
+        handler.CheckMarkers();
     }
 
     public void QuitGame()
     {
-        Application.Quit();
+        // Application.Quit();
+        // We change the scene
     }
 
     private void ClearAllGuesses()
     {
-        // Loop through all guess rows and clear them
-        if (SelectionHandler.instance != null && SelectionHandler.instance.guesses != null)
-        {
-            for (int i = 0; i < SelectionHandler.instance.guesses.Length; i++)
-            {
-                if (SelectionHandler.instance.guesses[i] != null)
-                {
-                    // Clear all holes in this guess row
-                    HoleScript[] holes = SelectionHandler.instance.guesses[i].GetComponentsInChildren<HoleScript>();
-                    for (int j = 0; j < holes.Length; j++)
-                    {
-                        if (holes[j] != null)
-                        {
-                            holes[j].OnWipe();
-                        }
-                    }
+        if (SelectionHandler.instance == null || SelectionHandler.instance.guesses == null)
+            return;
 
-                    // Clear the feedback square
-                    Transform squareTransform = SelectionHandler.instance.guesses[i].transform.Find("Square");
-                    if (squareTransform != null)
-                    {
-                        TMPro.TMP_Text feedbackText = squareTransform.GetComponentInChildren<TMPro.TMP_Text>();
-                        if (feedbackText != null)
-                        {
-                            feedbackText.text = "";
-                        }
-                    }
-                }
+        foreach (var guess in SelectionHandler.instance.guesses)
+        {
+            if (guess == null) continue;
+
+            // Limpia hoyos y pistas directamente desde GuessScript
+            guess.ResetGuess();
+
+            // Opcional: limpia el texto de feedback si existe
+            Transform squareTransform = guess.transform.Find("Square");
+            if (squareTransform != null)
+            {
+                var feedbackText = squareTransform.GetComponentInChildren<TMPro.TMP_Text>();
+                if (feedbackText != null)
+                    feedbackText.text = "";
             }
         }
     }

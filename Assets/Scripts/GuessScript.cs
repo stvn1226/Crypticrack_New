@@ -1,23 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GuessScript : MonoBehaviour
 {
-    // This script is used to identify each guess row
-    // You can extend it with additional functionality like highlighting active rows
+    [Header("Hole Group")]
+    public HoleScript[] holes;
 
-    public int guessNumber; // The index of this guess row
+    [Header("Hint Group")]
+    public HintScript[] hints;
 
-    // Highlight the current active row
-    public void SetActive(bool active)
+    private void Awake()
     {
-        // Optional: Change color or add indicator to show this is the active row
-        // For example, add a small arrow or highlight
-        Transform highlightIndicator = transform.Find("ActiveIndicator");
-        if (highlightIndicator != null)
+        // Set IDs for holes
+        for (int i = 0; i < holes.Length; i++)
         {
-            highlightIndicator.gameObject.SetActive(active);
+            if (holes[i] != null)
+                holes[i].id = i;
+        }
+
+        // Set IDs for hints
+        for (int i = 0; i < hints.Length; i++)
+        {
+            if (hints[i] != null)
+                hints[i].id = i;
+        }
+    }
+
+    /// <summary>
+    /// Clears all holes and resets hint visuals
+    /// </summary>
+    public void ResetGuess()
+    {
+        foreach (var hole in holes)
+        {
+            if (hole != null)
+                hole.OnWipe();
+        }
+
+        foreach (var hint in hints)
+        {
+            if (hint != null)
+                hint.ResetHint();
         }
     }
 }

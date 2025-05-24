@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
@@ -11,7 +9,7 @@ public class HoleScript : MonoBehaviour
     public Image img;
     public Color empty;
     public Image marker;
-    // Start is called before the first frame update
+
     void Start()
     {
         empty = img.color;
@@ -26,7 +24,6 @@ public class HoleScript : MonoBehaviour
         label.color = colorText;
         img.color = colorBg;
         marker.transform.localScale = Vector3.one * 0.5f;
-        //marker.transform.right = Vector3.one * 0.5f;
         SelectionHandler.instance.CheckMarkers();
     }
 
@@ -36,7 +33,6 @@ public class HoleScript : MonoBehaviour
         label.text = "";
         img.color = empty;
         marker.transform.localScale = Vector3.one * 1;
-        //marker.transform.right = Vector3.one * 1;
         SelectionHandler.instance.holeIndex = id;
         marker.gameObject.SetActive(false);
         SelectionHandler.instance.CheckMarkers();
@@ -55,7 +51,6 @@ public class HoleScript : MonoBehaviour
 
     public void ToggleMarker()
     {
-
         if (SelectionHandler.instance.holeIndex == id)
         {
             marker.gameObject.SetActive(true);
