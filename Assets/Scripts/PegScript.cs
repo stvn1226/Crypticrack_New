@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
 public class PegScript : MonoBehaviour
 {
-    
     public TMP_Text value;
     public Image img;
-    // Start is called before the first frame update
+
     void Start()
     {
         img = GetComponent<Image>();
@@ -27,5 +24,15 @@ public class PegScript : MonoBehaviour
         Debug.Log("Clicked! " + value.text);
 
         SelectionHandler.instance.FillHole(valueInt, value.color, img.color);
+    }
+    
+    public Color GetTextColor()
+    {
+        return value.color;
+    }
+    
+    public Color GetBgColor()
+    {
+        return img.color;
     }
 }

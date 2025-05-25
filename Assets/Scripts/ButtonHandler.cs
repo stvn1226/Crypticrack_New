@@ -48,7 +48,6 @@ public class ButtonHandler : MonoBehaviour
         handler.gameOver = false;
         handler.playerWon = false;
 
-        handler.GenerateSecretCode();
         ClearAllGuesses();
 
         // Limpia el primer grupo
@@ -60,9 +59,14 @@ public class ButtonHandler : MonoBehaviour
             }
         }
 
-        handler.InitializeSecretCodeDisplay();
         handler.HideGameResult();
         handler.HideSecretCode();
+        
+        // We add this to HideSecretCode() function, to assure
+        // it will happen when we finish the animation (avoid visual problems)
+        // handler.GenerateSecretCode();
+        // handler.InitializeSecretCodeDisplay();
+        
         handler.CheckMarkers();
     }
 

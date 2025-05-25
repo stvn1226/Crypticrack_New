@@ -46,7 +46,6 @@ public class HoleScript : MonoBehaviour
         marker.transform.localScale = Vector3.one * 1;
         marker.gameObject.SetActive(false);
         SelectionHandler.instance.CheckMarkers();
-
     }
 
     public void ToggleMarker()

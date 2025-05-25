@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class SelectionHandler : MonoBehaviour
 {
@@ -7,11 +9,15 @@ public class SelectionHandler : MonoBehaviour
     
     public PegScript peg { get; private set; }
     
+    public PegScript[] pegs = new PegScript[6];
+    
     [Header("Game Flow")]
     public GuessScript[] guesses = new GuessScript[8];
     public int guessIndex = 0;
     public int holeIndex = 0;
     public int hintIndex = 0;
+    
+    public HiddenAnswerSlot[] hiddenAnswers = new HiddenAnswerSlot[4];
     
     [Header("Game State")]
     public int[] secretCode = new int[4];
@@ -27,6 +33,13 @@ public class SelectionHandler : MonoBehaviour
     private HoleScript[] holes => guesses[guessIndex].holes;
     private HintScript[] hints => guesses[guessIndex].hints;
     
+    private Dictionary<int, PegScript> pegDict = new Dictionary<int, PegScript>();
+    
+    public RectTransform coverRect;
+
+    public Vector3 initialPoint;
+    public RectTransform endPoint;
+    
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -40,6 +53,15 @@ public class SelectionHandler : MonoBehaviour
     // We clean the start method with a simpler way / Way more optimal
     void Start()
     {
+        initialPoint = coverRect.position;
+        
+        // We register Pegs in a dictionary to copy the data in the answer stuff
+        for (int i = 0; i < pegs.Length; i++)
+        {
+            print($"Peg Index: {i}");
+            pegDict.Add(i, pegs[i]);;
+        }
+        
         GenerateSecretCode();
         InitializeSecretCodeDisplay();
 
@@ -49,11 +71,33 @@ public class SelectionHandler : MonoBehaviour
         }
     }
 
+    public PegScript GetPeg(int id)
+    {
+        if (pegDict.TryGetValue(id, out PegScript peg))
+        {
+            print($"Peg Index: {id}");
+            return peg;
+        }
+        else
+        {
+            Debug.LogError($"Peg with id {id} not found!");
+            return null;
+        }
+    }
+
     public void GenerateSecretCode()
     {
         for (int i = 0; i < secretCode.Length; i++)
         {
             secretCode[i] = Random.Range(1, 7); // 1-6 peg colors
+        }
+
+        for (int i = 0; i < secretCode.Length; i++)
+        {
+            int secretDigit = secretCode[i];
+            // Is needed to pass the secretDigit - 1 because in dictionary we register values from 0 to 5
+            // In secretDigits we register from 1 to 6, to make the values be in the range, we should take 1 (x - 1)
+            hiddenAnswers[i].OnShowAnswer(secretDigit, GetPeg(secretDigit-1).GetTextColor(), GetPeg(secretDigit-1).GetBgColor());
         }
 
         Debug.Log($"Secret code: {string.Join(", ", secretCode)}");
@@ -81,17 +125,46 @@ public class SelectionHandler : MonoBehaviour
     {
         Debug.Log($"Secret code was: {string.Join(", ", secretCode)}");
 
-        if (secretCodeCover != null)
-            secretCodeCover.SetActive(false);
+        StartCoroutine(AnimateSecretReveal());
+        
+        // if (secretCodeCover != null)
+        //     secretCodeCover.SetActive(false);
+    }
+
+    IEnumerator AnimateSecretReveal()
+    {
+        float maxAnimTime = .3f;
+        for (float i = 0; i < maxAnimTime; i += Time.deltaTime)
+        {
+            coverRect.position = Vector3.Lerp(initialPoint, endPoint.position, i / maxAnimTime);
+            yield return null;
+        }
+        coverRect.position = endPoint.position;
+        yield return null;
+    }
+    
+    IEnumerator AnimateSecretHide()
+    {
+        float maxAnimTime = .05f;
+        for (float i = 0; i < maxAnimTime; i += Time.deltaTime)
+        {
+            coverRect.position = Vector3.Lerp(endPoint.position, initialPoint, i / maxAnimTime);
+            yield return null;
+        }
+        coverRect.position = initialPoint;
+        yield return null;
+
+        OnResetAnswer();
     }
 
     public void HideSecretCode()
     {
         // Call this when starting a new game
-        if (secretCodeCover != null)
-        {
-            secretCodeCover.SetActive(true);
-        }
+        // if (secretCodeCover != null)
+        // {
+        //     secretCodeCover.SetActive(true);
+        // }
+        StartCoroutine(AnimateSecretHide());
     }
 
     public void TryGuess()
@@ -242,6 +315,13 @@ public class SelectionHandler : MonoBehaviour
             if (hole != null)
                 hole.ToggleMarker();
         }
+    }
+
+
+    public void OnResetAnswer()
+    {
+        GenerateSecretCode();
+        InitializeSecretCodeDisplay();
     }
     
     public void TryGuess(int currGuessIndex, int[] answer)
