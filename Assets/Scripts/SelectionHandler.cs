@@ -2,6 +2,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.UI;
 
 public class SelectionHandler : MonoBehaviour
 {
@@ -24,9 +25,10 @@ public class SelectionHandler : MonoBehaviour
     public bool gameOver = false;
     public bool playerWon = false;
 
-    [Header("UI")]
+    //[Header("UI")]
     public Transform secretCodeHolesParent;
-    private TMP_Text[] secretCodeLabels;
+    public GameObject secretCodeLabelParent;
+    private TMP_Text secretCodeLabel;
     public GameObject secretCodeCover;
     public GameObject resultPanel;
 
@@ -53,6 +55,7 @@ public class SelectionHandler : MonoBehaviour
     // We clean the start method with a simpler way / Way more optimal
     void Start()
     {
+        secretCodeLabel = secretCodeLabelParent.GetComponentInChildren<TMP_Text>();
         initialPoint = coverRect.position;
         
         // We register Pegs in a dictionary to copy the data in the answer stuff
@@ -63,6 +66,8 @@ public class SelectionHandler : MonoBehaviour
         }
         
         GenerateSecretCode();
+
+        //Secret Code Display is for testing purposes, to see the code during gameplay
         InitializeSecretCodeDisplay();
 
         if (guesses.Length > 0 && guesses[0] != null)
@@ -105,20 +110,33 @@ public class SelectionHandler : MonoBehaviour
 
     public void InitializeSecretCodeDisplay()
     {
-        secretCodeLabels = new TMP_Text[secretCode.Length];
+        string secretCodeString = "";
 
-        for (int i = 0; i < secretCode.Length; i++)
+        foreach (int p in secretCode)
         {
-            Transform holeTransform = secretCodeHolesParent.Find($"SecretHole ({i})");
-            if (holeTransform != null)
-            {
-                secretCodeLabels[i] = holeTransform.GetComponentInChildren<TMP_Text>();
-                if (secretCodeLabels[i] != null)
-                    secretCodeLabels[i].text = secretCode[i].ToString();
-            }
+            secretCodeString += p + " ";
         }
 
-        //HideSecretCode(); // Optional
+        secretCodeLabel.text = secretCodeString;
+        secretCodeLabelParent.GetComponent<Image>().color = Color.blue;
+
+        foreach (int q in secretCode)
+        {
+            int ct = 0;
+            foreach (int i in secretCode)
+            {
+                if (q == i)
+                {
+                    ct++;
+                }
+
+                if (ct > 1)
+                {
+                    secretCodeLabelParent.GetComponent<Image>().color = Color.red;
+                    break;
+                }
+            }
+        }
     }
 
     public void RevealSecretCode()
@@ -287,7 +305,7 @@ public class SelectionHandler : MonoBehaviour
             {
                 resultText.text = won ?
                     "Congratulations! You cracked the code!" :
-                    "Game Over! The code remains unbroken.";
+                    "Game Over! The code remains infallible.";
             }
         }
     }

@@ -503,7 +503,7 @@ RectTransform:
   m_GameObject: {fileID: 513559737}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 500, z: 1}
+  m_LocalScale: {x: 110, y: 510, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3876507773303447009}
@@ -1263,6 +1263,7 @@ MonoBehaviour:
   gameOver: 0
   playerWon: 0
   secretCodeHolesParent: {fileID: 3876507773303447009}
+  secretCodeLabelParent: {fileID: 988424851}
   secretCodeCover: {fileID: 513559737}
   resultPanel: {fileID: 1524645011}
   coverRect: {fileID: 513559739}
@@ -3519,7 +3520,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 675, y: 0}
-  m_SizeDelta: {x: 100, y: 500}
+  m_SizeDelta: {x: 115, y: 515}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &4087368949814644891
 RectTransform:

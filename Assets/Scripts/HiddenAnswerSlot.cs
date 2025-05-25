@@ -15,7 +15,7 @@ public class HiddenAnswerSlot : MonoBehaviour
 
     public void OnShowAnswer(int value, Color colorText, Color colorBg)
     {
-        transform.localScale = Vector3.one * 2;
+        transform.localScale = Vector3.one * 1.8f;
         label.text = value.ToString();
         label.color = colorText;
         img.color = colorBg;
