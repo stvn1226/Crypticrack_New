@@ -6,12 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4ea33285-fc55-42e9-a60e-51a1f6fc4b3e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Crypticrack_Online/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Crypticrack_Online/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/GuessHoriz.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/GuessHoriz.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Hole.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Hole.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ButtonHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ButtonHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/HiddenAnswerSlot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/HiddenAnswerSlot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/HoleScript.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/HoleScript.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/SelectionHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/SelectionHandler.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,7 +19,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/CheckButton.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/DebugTools.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -109,7 +105,7 @@
       <workItem from="1747503311594" duration="10560000" />
       <workItem from="1748098792870" duration="17127000" />
       <workItem from="1748701600842" duration="2108000" />
-      <workItem from="1748703756568" duration="2610000" />
+      <workItem from="1748703756568" duration="3886000" />
     </task>
     <servers />
   </component>

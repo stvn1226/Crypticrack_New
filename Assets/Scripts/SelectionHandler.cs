@@ -41,6 +41,8 @@ public class SelectionHandler : MonoBehaviour
 
     public Vector3 initialPoint;
     public RectTransform endPoint;
+
+    [SerializeField] private bool canDigitsRepeat = true;
     
     private void Awake()
     {
@@ -93,11 +95,35 @@ public class SelectionHandler : MonoBehaviour
 
     public void GenerateSecretCode()
     {
-        for (int i = 0; i < secretCode.Length; i++)
+        if (canDigitsRepeat)
         {
-            secretCode[i] = Random.Range(1, 7); // 1-6 peg colors
+            for (int i = 0; i < secretCode.Length; i++)
+            {
+                secretCode[i] = Random.Range(1, 7); // 1-6 peg colors
+            }
         }
+        else
+        {
+            List<int> indexList = new List<int>();
+            for (int i = 1; i < 7; i++)
+            {
+                indexList.Add(i);
+            }
 
+            int unrepeateableIndex = -1;
+            
+            // 2,3,5,6
+            // 1,2,4,5
+            
+            for (int i = 0; i < secretCode.Length; i++)
+            {
+                unrepeateableIndex = Random.Range(0, indexList.Count - 1); // Check new indexes
+                 
+                secretCode[i] = indexList[unrepeateableIndex];
+                indexList.RemoveAt(unrepeateableIndex); // Remove the index from the list to avoid repeating it
+            }
+        }
+        
         for (int i = 0; i < secretCode.Length; i++)
         {
             int secretDigit = secretCode[i];
