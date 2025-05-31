@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class HiddenAnswerSlot : MonoBehaviour
 {
@@ -15,7 +16,8 @@ public class HiddenAnswerSlot : MonoBehaviour
 
     public void OnShowAnswer(int value, Color colorText, Color colorBg)
     {
-        transform.localScale = Vector3.one * 1.8f;
+        // transform.localScale = Vector3.one * 1.8f;
+        transform.DOScale(Vector3.one * 1.8f, 0.2f);    
         label.text = value.ToString();
         label.color = colorText;
         img.color = colorBg;

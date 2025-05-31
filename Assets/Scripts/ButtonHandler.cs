@@ -56,6 +56,7 @@ public class ButtonHandler : MonoBehaviour
             foreach (var hole in handler.guesses[0].holes)
             {
                 hole.OnWipe();
+                hole.OnEnableButton();
             }
         }
 

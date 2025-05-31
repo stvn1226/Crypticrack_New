@@ -61,7 +61,7 @@ public class SelectionHandler : MonoBehaviour
         // We register Pegs in a dictionary to copy the data in the answer stuff
         for (int i = 0; i < pegs.Length; i++)
         {
-            print($"Peg Index: {i}");
+            // print($"Peg Index: {i}");
             pegDict.Add(i, pegs[i]);;
         }
         
@@ -72,6 +72,7 @@ public class SelectionHandler : MonoBehaviour
 
         if (guesses.Length > 0 && guesses[0] != null)
         {
+            EnableColumn();
             CheckMarkers();
         }
     }
@@ -197,6 +198,11 @@ public class SelectionHandler : MonoBehaviour
             }
         }
 
+        foreach (var hole in holes)
+        {
+           hole.OnDisableButton();
+        }
+        
         // Get current guess values
         int[] currentGuess = new int[holes.Length];
         for (int i = 0; i < holes.Length; i++)
@@ -278,7 +284,7 @@ public class SelectionHandler : MonoBehaviour
     {
         // Disable all markers on previous holes
         foreach (var hole in holes)
-            hole.ToggleMarker();
+            hole.DisableMarker();
 
         holeIndex = 0;
         guessIndex++;
@@ -290,6 +296,7 @@ public class SelectionHandler : MonoBehaviour
             return;
         }
 
+        EnableColumn();
         CheckMarkers(); // Show marker on first hole of next guess
     }
 
@@ -325,6 +332,15 @@ public class SelectionHandler : MonoBehaviour
         holeIndex++;
         CheckMarkers();
     }
+
+    public void EnableColumn()
+    {
+        foreach (var hole in holes)
+        {
+            hole.OnEnableButton();   
+        }
+    }
+    
 
     public void CheckMarkers()
     {
