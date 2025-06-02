@@ -4,7 +4,9 @@ using UnityEngine.UI;
 public class ButtonHandler : MonoBehaviour
 {
     public bool repeticua;
-    public GameObject repeatSwitch;
+    public bool cheat;
+    public GameObject targetSwitch;
+    public GameObject cheatDisplay;
 
     public void Confirm()
     {
@@ -106,20 +108,35 @@ public class ButtonHandler : MonoBehaviour
 
     public void ToggleRepeat()
     {
-        if (repeticua == true)
+        if (repeticua)
         {
             repeticua = false;
-            repeatSwitch.transform.Translate(-0.4f, 0, 0);
-            repeatSwitch.GetComponent<Image>().color = Color.blue;
+            targetSwitch.transform.Translate(-0.4f, 0, 0);
+            targetSwitch.GetComponent<Image>().color = Color.blue;
             NewGame();
         }
         else
         {
             repeticua = true;
-            repeatSwitch.transform.Translate(0.4f, 0, 0);
-            repeatSwitch.GetComponent<Image>().color = Color.red;
+            targetSwitch.transform.Translate(0.4f, 0, 0);
+            targetSwitch.GetComponent<Image>().color = Color.red;
             NewGame();
         }
     }
 
+    public void ToggleCheat()
+    {
+        if (cheat)
+        {
+            cheat = false;
+            targetSwitch.transform.Translate(-0.4f, 0, 0);
+            cheatDisplay.SetActive(false);
+        }
+        else
+        {
+            cheat = true;
+            targetSwitch.transform.Translate(0.4f, 0, 0);
+            cheatDisplay.SetActive(true);
+        }
+    }
 }
