@@ -1,7 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonHandler : MonoBehaviour
 {
+    public bool repeticua;
+    public GameObject repeatSwitch;
+
     public void Confirm()
     {
         if (SelectionHandler.instance != null && !SelectionHandler.instance.gameOver)
@@ -99,4 +103,23 @@ public class ButtonHandler : MonoBehaviour
             }
         }
     }
+
+    public void ToggleRepeat()
+    {
+        if (repeticua == true)
+        {
+            repeticua = false;
+            repeatSwitch.transform.Translate(-0.4f, 0, 0);
+            repeatSwitch.GetComponent<Image>().color = Color.blue;
+            NewGame();
+        }
+        else
+        {
+            repeticua = true;
+            repeatSwitch.transform.Translate(0.4f, 0, 0);
+            repeatSwitch.GetComponent<Image>().color = Color.red;
+            NewGame();
+        }
+    }
+
 }

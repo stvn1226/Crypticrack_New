@@ -42,7 +42,8 @@ public class SelectionHandler : MonoBehaviour
     public Vector3 initialPoint;
     public RectTransform endPoint;
 
-    [SerializeField] private bool canDigitsRepeat = true;
+    //[SerializeField] private bool canDigitsRepeat = true;
+    public ButtonHandler repeatDigits;
     
     private void Awake()
     {
@@ -95,7 +96,7 @@ public class SelectionHandler : MonoBehaviour
 
     public void GenerateSecretCode()
     {
-        if (canDigitsRepeat)
+        if (repeatDigits.repeticua)
         {
             for (int i = 0; i < secretCode.Length; i++)
             {
