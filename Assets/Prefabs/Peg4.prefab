@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3782722617742141647
+--- !u!1001 &6877391357840056225
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 528887521568227320, guid: 23d5e965b2c14204792d26324258fdc6, type: 3}
       propertyPath: m_Name
-      value: Button2
+      value: Peg4
       objectReference: {fileID: 0}
     - target: {fileID: 2274935756128089930, guid: 23d5e965b2c14204792d26324258fdc6, type: 3}
       propertyPath: m_Pivot.x
@@ -102,11 +102,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6819847473147852957, guid: 23d5e965b2c14204792d26324258fdc6, type: 3}
       propertyPath: m_Color.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7878645782876532975, guid: 23d5e965b2c14204792d26324258fdc6, type: 3}
       propertyPath: m_text
-      value: '2
+      value: '4
 
 '
       objectReference: {fileID: 0}

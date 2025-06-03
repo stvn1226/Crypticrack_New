@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 528887521568227320, guid: 23d5e965b2c14204792d26324258fdc6, type: 3}
       propertyPath: m_Name
-      value: Button5
+      value: Peg5
       objectReference: {fileID: 0}
     - target: {fileID: 2274935756128089930, guid: 23d5e965b2c14204792d26324258fdc6, type: 3}
       propertyPath: m_Pivot.x
